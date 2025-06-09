@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Transformation in Academic Research</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            line-height: 1.7;
+            color: #2d3748;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 600;
+            color: #1a365d;
+            line-height: 1.3;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: #f7fafc;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content-full {
+            margin-left: 0;
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background-color: #edf2f7;
+            border-left-color: #4299e1;
+        }
+        
+        .nav-item.active {
+            background-color: #e6f3ff;
+            border-left-color: #2b6cb0;
+            color: #2b6cb0;
+        }
+        
+        .abstract-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid #0284c7;
+        }
+        
+        .quote-box {
+            background: #f8fafc;
+            border-left: 4px solid #64748b;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .quote-box::before {
+            content: '"';
+            font-size: 3rem;
+            color: #94a3b8;
+            position: absolute;
+            top: -0.5rem;
+            left: 1rem;
+            line-height: 1;
+        }
+        
+        .footnote-ref {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .footnote-ref:hover {
+            text-decoration: underline;
+            color: #1d4ed8;
+        }
+        
+        .section-number {
+            color: #475569;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        
+        .author-info {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+        
+        .keyword-tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .citation-number {
+            vertical-align: super;
+            font-size: 0.75rem;
+            color: #2563eb;
+            cursor: pointer;
+        }
+        
+        .toggle-sidebar {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            display: none;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+        
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 3px;
+            background: #e2e8f0;
+            z-index: 999;
+        }
+        
+        .scroll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .scroll-progress {
+                left: 0;
+            }
+        }
+        
+        .footnotes-section {
+            border-top: 2px solid #e2e8f0;
+            margin-top: 3rem;
+            padding-top: 2rem;
+        }
+        
+        .footnote-item {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .footnote-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .back-to-ref {
+            color: #2563eb;
+            text-decoration: none;
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .back-to-ref:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress">
+        <div class="scroll-progress-bar" id="scrollProgress"></div>
+    </div>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="toggle-sidebar" id="sidebarToggle">
+        <i class="fas fa-bars text-gray-600"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="p-6">
+            <div class="flex items-center mb-6">
+                <i class="fas fa-bookmark text-blue-600 mr-2"></i>
+                <h3 class="text-lg font-semibold text-gray-800">Table of Contents</h3>
+            </div>
+            
+            <ul class="space-y-1">
+                <li><a href="#abstract" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="abstract">Abstract</a></li>
+                <li><a href="#introduction" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="introduction"><span class="section-number">1.</span>Introduction</a></li>
+                <li><a href="#literature-review" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="literature-review"><span class="section-number">2.</span>Literature Review</a></li>
+                <li class="ml-4">
+                    <a href="#historical-context" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="historical-context">2.1 Historical Context</a>
+                </li>
+                <li class="ml-4">
+                    <a href="#theoretical-frameworks" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="theoretical-frameworks">2.2 Theoretical Frameworks</a>
+                </li>
+                <li><a href="#methodology" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="methodology"><span class="section-number">3.</span>Methodology</a></li>
+                <li><a href="#results" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="results"><span class="section-number">4.</span>Results and Analysis</a></li>
+                <li><a href="#discussion" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="discussion"><span class="section-number">5.</span>Discussion</a></li>
+                <li><a href="#conclusion" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="conclusion"><span class="section-number">6.</span>Conclusion</a></li>
+                <li><a href="#references" class="nav-item block px-3 py-2 text-sm rounded-md" data-section="references">References</a></li>
+            </ul>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <h4 class="text-sm font-semibold text-gray-700 mb-3">
+                    <i class="fas fa-tools mr-2"></i>Quick Navigation
+                </h4>
+                <ul class="space-y-1">
+                    <li><a href="#footnotes" class="nav-item block px-3 py-2 text-sm rounded-md"><i class="fas fa-sticky-note mr-2"></i>Footnotes</a></li>
+                    <li><button onclick="window.print()" class="nav-item block px-3 py-2 text-sm rounded-md w-full text-left"><i class="fas fa-print mr-2"></i>Print Version</a></li>
+                    <li><button onclick="shareArticle()" class="nav-item block px-3 py-2 text-sm rounded-md w-full text-left"><i class="fas fa-share mr-2"></i>Share Article</a></li>
+                </ul>
+            </div>
+            
+            <div class="mt-6 p-3 bg-blue-50 rounded-lg">
+                <p class="text-xs text-blue-700 text-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Citation:<br>
+                    Smith, J. (2024). Digital Transformation in Academic Research. <em>Journal of Academic Studies</em>, 12(3), 45-68.
+                </p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="max-w-4xl mx-auto px-6 py-8">
+            <!-- Header -->
+            <header class="mb-12 text-center">
+                <h1 class="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+                    Digital Transformation in Academic Research:<br>
+                    <span class="text-2xl md:text-3xl font-normal text-gray-600">A Comprehensive Analysis of Contemporary Methodologies</span>
+                </h1>
+                
+                <div class="author-info space-y-2 mb-6">
+                    <p class="text-lg">Dr. Jane Smith<sup>1</sup>, Prof. Michael Johnson<sup>2</sup></p>
+                    <p class="text-sm">
+                        <sup>1</sup>Department of Information Systems, University of Technology<br>
+                        <sup>2</sup>School of Digital Innovation, Academic Institute
+                    </p>
+                    <p class="text-sm text-gray-500 mt-4">
+                        Received: March 15, 2024 | Accepted: April 22, 2024 | Published: May 1, 2024
+                    </p>
+                </div>
+            </header>
+
+            <!-- Abstract -->
+            <section id="abstract" class="mb-12">
+                <div class="abstract-box p-6 rounded-lg">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-file-alt mr-3 text-blue-600"></i>Abstract
+                    </h2>
+                    <p class="mb-4">
+                        This study examines the impact of digital transformation on academic research methodologies, analyzing how emerging technologies have reshaped scholarly inquiry over the past decade. Through a comprehensive literature review and empirical analysis of 450 research institutions, we identify key trends in digital adoption and their implications for research quality and accessibility.
+                    </p>
+                    <p class="mb-6">
+                        Our findings suggest that institutions embracing integrated digital platforms demonstrate a 34% increase in research collaboration<a href="#footnote1" class="footnote-ref" id="ref1">[1]</a> and a 28% improvement in publication impact metrics. However, significant challenges remain in data standardization and researcher training requirements.
+                    </p>
+                    <div>
+                        <strong class="text-gray-700">Keywords:</strong>
+                        <div class="mt-2 space-x-2">
+                            <span class="keyword-tag">digital transformation</span>
+                            <span class="keyword-tag">academic research</span>
+                            <span class="keyword-tag">methodology</span>
+                            <span class="keyword-tag">collaboration</span>
+                            <span class="keyword-tag">impact metrics</span>
+                            <span class="keyword-tag">institutional analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Introduction -->
+            <section id="introduction" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">1.</span>Introduction
+                </h2>
+                <p class="mb-6">
+                    The landscape of academic research has undergone profound transformation in the digital age. Traditional methodologies, once constrained by physical limitations and geographical boundaries, have evolved into sophisticated, technology-enhanced approaches that enable unprecedented collaboration and data analysis capabilities<a href="#footnote2" class="footnote-ref" id="ref2">[2]</a>.
+                </p>
+                <p class="mb-6">
+                    This transformation extends beyond mere digitization of existing processes. As Henderson et al. (2023) note, "Digital transformation in academia represents a fundamental shift in how knowledge is created, validated, and disseminated"<a href="#footnote3" class="footnote-ref" id="ref3">[3]</a>. The integration of artificial intelligence, machine learning, and advanced analytics has created new paradigms for research design and execution.
+                </p>
+                
+                <div class="quote-box p-6 my-8 rounded-lg">
+                    <p class="text-lg pl-8">
+                        "The future of academic research lies not in replacing human insight with technology, but in creating synergistic partnerships between human creativity and computational power."
+                    </p>
+                    <p class="text-right mt-4 text-gray-600 font-medium">— Digital Research Consortium (2024)</p>
+                </div>
+                
+                <p class="mb-6">
+                    This comprehensive study aims to address three fundamental questions: How has digital transformation affected research quality and reproducibility? What institutional factors contribute to successful digital adoption? And what challenges must be overcome to ensure equitable access to digital research tools across diverse academic institutions?
+                </p>
+            </section>
+
+            <!-- Literature Review -->
+            <section id="literature-review" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">2.</span>Literature Review
+                </h2>
+                
+                <div id="historical-context" class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">2.1 Historical Context</h3>
+                    <p class="mb-4">
+                        The evolution of digital research methodologies can be traced through three distinct phases. The initial digitization phase (1990-2005) focused primarily on converting analog resources to digital formats. The integration phase (2005-2015) saw the development of collaborative platforms and database integration. The current transformation phase (2015-present) is characterized by intelligent automation and predictive analytics.
+                    </p>
+                </div>
+                
+                <div id="theoretical-frameworks" class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">2.2 Current Theoretical Frameworks</h3>
+                    <p class="mb-4">
+                        Recent scholarship has developed several theoretical frameworks for understanding digital transformation in academic contexts. The Technology Acceptance Model (TAM) has been extended to address institutional factors<a href="#footnote4" class="footnote-ref" id="ref4">[4]</a>, while the Diffusion of Innovations theory provides insights into adoption patterns across different academic disciplines.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Methodology -->
+            <section id="methodology" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">3.</span>Methodology
+                </h2>
+                <p class="mb-6">
+                    This study employed a mixed-methods approach, combining quantitative analysis of institutional data with qualitative interviews from research administrators and faculty members. The research design was approved by the Institutional Review Board (IRB-2024-157) and follows established protocols for academic research ethics.
+                </p>
+                
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold mb-3">3.1 Data Collection</h3>
+                    <p class="mb-3">
+                        Primary data was collected from 450 research institutions across six continents over a 24-month period (January 2022 - December 2023). Institutions were stratified by size, funding level, and geographic region to ensure representative sampling.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-3">3.2 Analysis Framework</h3>
+                    <p>
+                        Statistical analysis was conducted using R version 4.3.1, with multivariate regression models employed to identify significant predictors of digital adoption success. Qualitative data was analyzed using thematic coding techniques implemented in NVivo 12.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Results -->
+            <section id="results" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">4.</span>Results and Analysis
+                </h2>
+                <p class="mb-6">
+                    Our analysis reveals significant correlations between digital transformation initiatives and research outcomes. Institutions with comprehensive digital strategies demonstrated measurable improvements across multiple performance indicators.
+                </p>
+                
+                <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-blue-900">4.1 Quantitative Findings</h3>
+                    <p class="text-blue-800">
+                        The most significant finding concerns the relationship between digital platform integration and collaborative research output. Institutions utilizing integrated research management systems showed a 34% increase in inter-institutional collaborations compared to control groups (p < 0.001, CI: 28-40%).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Discussion -->
+            <section id="discussion" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">5.</span>Discussion
+                </h2>
+                <p class="mb-6">
+                    These findings have significant implications for academic policy and institutional planning. The strong correlation between digital integration and research outcomes suggests that investment in comprehensive digital infrastructure should be prioritized by academic leadership<a href="#footnote5" class="footnote-ref" id="ref5">[5]</a>.
+                </p>
+                <p class="mb-6">
+                    However, our research also identifies potential limitations and areas requiring further investigation. The digital divide between well-funded and resource-constrained institutions remains a significant concern for equitable access to research opportunities.
+                </p>
+            </section>
+
+            <!-- Conclusion -->
+            <section id="conclusion" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="section-number text-lg">6.</span>Conclusion
+                </h2>
+                <p class="mb-6">
+                    Digital transformation represents both an opportunity and a challenge for contemporary academic research. While the benefits of enhanced collaboration and analytical capabilities are clear, successful implementation requires careful consideration of institutional context, resource allocation, and equity concerns.
+                </p>
+                <p class="mb-6">
+                    Future research should focus on developing frameworks for measuring digital transformation success and creating best-practice guidelines for institutions at different stages of digital adoption. Additionally, longitudinal studies examining the long-term impacts of digital transformation on research quality and scholarly communication would provide valuable insights for the academic community.
+                </p>
+            </section>
+
+            <!-- References -->
+            <section id="references" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-book mr-3 text-gray-600"></i>References
+                </h2>
+                <div class="space-y-4 text-sm">
+                    <div class="pl-6 relative">
+                        <span class="absolute left-0 top-0 text-gray-500">1.</span>
+                        Anderson, R., & Thompson, L. (2023). <em>Digital Infrastructure in Higher Education: A Comprehensive Analysis</em>. Academic Press.
+                    </div>
+                    <div class="pl-6 relative">
+                        <span class="absolute left-0 top-0 text-gray-500">2.</span>
+                        Chen, M., Davis, K., & Wilson, S. (2024). Collaborative research platforms: Impact on scholarly productivity. <em>Journal of Academic Technology</em>, 12(3), 45-62.
+                    </div>
+                    <div class="pl-6 relative">
+                        <span class="absolute left-0 top-0 text-gray-500">3.</span>
+                        Henderson, J., Martinez, A., & Lee, C. (2023). Technology adoption in academic institutions: A multi-national study. <em>Higher Education Research Quarterly</em>, 28(4), 112-128.
+                    </div>
+                    <div class="pl-6 relative">
+                        <span class="absolute left-0 top-0 text-gray-500">4.</span>
+                        Roberts, P., & Singh, N. (2022). Digital transformation metrics in research institutions. <em>Educational Technology Review</em>, 15(2), 78-94.
+                    </div>
+                    <div class="pl-6 relative">
+                        <span class="absolute left-0 top-0 text-gray-500">5.</span>
+                        Zhang, L., & Kumar, A. (2024). Institutional factors in digital research adoption. <em>Academic Management Review</em>, 31(1), 23-39.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footnotes -->
+            <section id="footnotes" class="footnotes-section">
+                <h3 class="text-xl font-semibold mb-6 text-gray-700">
+                    <i class="fas fa-sticky-note mr-2"></i>Footnotes
+                </h3>
+                <div class="space-y-4 text-sm">
+                    <div class="footnote-item" id="footnote1">
+                        <span class="footnote-number">[1]</span>
+                        Collaboration metrics were measured using co-authorship networks and joint grant applications over a 36-month period.
+                        <a href="#ref1" class="back-to-ref">↑ Back to reference</a>
+                    </div>
+                    <div class="footnote-item" id="footnote2">
+                        <span class="footnote-number">[2]</span>
+                        For a comprehensive overview of digital research methodologies, see the Digital Research Handbook (Academic Press, 2023).
+                        <a href="#ref2" class="back-to-ref">↑ Back to reference</a>
+                    </div>
+                    <div class="footnote-item" id="footnote3">
+                        <span class="footnote-number">[3]</span>
+                        Henderson et al. (2023), p. 45.
+                        <a href="#ref3" class="back-to-ref">↑ Back to reference</a>
+                    </div>
+                    <div class="footnote-item" id="footnote4">
+                        <span class="footnote-number">[4]</span>
+                        The extended TAM model includes variables for institutional support, faculty training, and infrastructure readiness.
+                        <a href="#ref4" class="back-to-ref">↑ Back to reference</a>
+                    </div>
+                    <div class="footnote-item" id="footnote5">
+                        <span class="footnote-number">[5]</span>
+                        This recommendation aligns with recent policy guidelines from the International Academic Research Council (IARC, 2024).
+                        <a href="#ref5" class="back-to-ref">↑ Back to reference</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Update active state
+                        updateActiveNavItem(this);
+                        
+                        // Close mobile sidebar
+                        if (window.innerWidth <= 768) {
+                            document.getElementById('sidebar').classList.remove('active');
+                        }
+                    }
+                }
+            });
+        });
+
+        // Update active navigation item
+        function updateActiveNavItem(activeLink) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            activeLink.classList.add('active');
+        }
+
+        // Scroll progress bar
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateScrollProgress);
+
+        // Intersection Observer for active section highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const observerOptions = {
+            rootMargin: '-50px 0px -50px 0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const navLink = document.querySelector(`a[href="#${id}"]`);
+                    if (navLink) {
+                        updateActiveNavItem(navLink);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Mobile sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target) && 
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Share article function
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Digital Transformation in Academic Research',
+                    text: 'A comprehensive analysis of contemporary methodologies',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Article URL copied to clipboard!');
+                });
+            }
+        }
+
+        // Footnote smooth scrolling
+        document.querySelectorAll('.footnote-ref').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            });
+        });
+
+        document.querySelectorAll('.back-to-ref').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            });
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateScrollProgress();
+            
+            // Set initial active nav item
+            const firstSection = document.querySelector('section[id]');
+            if (firstSection) {
+                const id = firstSection.getAttribute('id');
+                const navLink = document.querySelector(`a[href="#${id}"]`);
+                if (navLink) {
+                    updateActiveNavItem(navLink);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
