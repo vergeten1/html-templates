@@ -1,0 +1,281 @@
+
+        .magazine-header {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pull-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            position: relative;
+        }
+        
+        .pull-quote::before {
+            content: '"';
+            font-size: 6rem;
+            position: absolute;
+            top: -2rem;
+            left: -3rem;
+            color: #667eea;
+            opacity: 0.3;
+        }
+        
+        .dropcap {
+            float: left;
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            line-height: 3rem;
+            padding-top: 0.5rem;
+            padding-right: 0.5rem;
+            margin-bottom: -0.5rem;
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        .sidebar-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .image-placeholder {
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .creative-divider {
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 2px;
+            margin: 3rem 0;
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .stats-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translatey(0px); }
+            50% { transform: translatey(-20px); }
+            100% { transform: translatey(0px); }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .magazine-body {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .accent-border {
+            border-left: 5px solid #667eea;
+            padding-left: 1rem;
+        }
+    
+
+
+/* Enhanced image styling for magazine layout */
+.hero-image img {
+    transition: transform 0.5s ease;
+}
+
+.hero-image img:hover {
+    transform: scale(1.02);
+}
+
+.featured-image {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.portfolio-gallery {
+    animation: fadeIn 1s ease-out;
+}
+
+.portfolio-item {
+    transition: all 0.3s ease;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+}
+
+.sidebar-image {
+    animation: slideInRight 0.6s ease-out;
+}
+
+/* Responsive image handling */
+@media (max-width: 768px) {
+    .sidebar-image {
+        float: none !important;
+        width: 100% !important;
+        margin: 1rem 0 !important;
+    }
+
+    .portfolio-gallery {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0.5rem !important;
+    }
+
+    .hero-image img {
+        height: 200px !important;
+    }
+
+    .featured-image img {
+        height: 300px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-item img {
+        height: 150px !important;
+    }
+
+    .sidebar-image img {
+        height: 150px !important;
+    }
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Image optimization for performance */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Enhanced figure styling */
+figure {
+    margin: 0;
+    position: relative;
+}
+
+figcaption {
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+figure:hover figcaption {
+    opacity: 1;
+}
+
+/* Print optimization */
+@media print {
+    .portfolio-gallery {
+        display: block !important;
+    }
+
+    .portfolio-item {
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar-image {
+        float: none !important;
+        width: 100% !important;
+    }
+}
