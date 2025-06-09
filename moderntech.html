@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Tech Manual - API Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent-green: #00d9ff;
+            --accent-purple: #7c3aed;
+            --border-color: #30363d;
+            --code-bg: #161b22;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-left-color: var(--accent-green);
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            max-width: calc(100vw - 280px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+            max-width: 100vw;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .code-block {
+            position: relative;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .language-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-green);
+            color: var(--bg-primary);
+            border-color: var(--accent-green);
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--bg-tertiary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: rgba(0, 217, 255, 0.1);
+            border-left-color: var(--accent-green);
+            color: var(--text-primary);
+        }
+
+        .alert-warning {
+            background-color: rgba(251, 191, 36, 0.1);
+            border-left-color: #fbbf24;
+            color: var(--text-primary);
+        }
+
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+            color: var(--text-primary);
+        }
+
+        .collapsible {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            padding: 1rem;
+            background-color: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .collapsible-header:hover {
+            background-color: var(--bg-primary);
+        }
+
+        .collapsible-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .collapsible.expanded .collapsible-content {
+            max-height: 500px;
+            padding: 1rem;
+        }
+
+        .collapsible.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .endpoint {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .method-get { background-color: #10b981; color: white; }
+        .method-post { background-color: #3b82f6; color: white; }
+        .method-put { background-color: #f59e0b; color: white; }
+        .method-delete { background-color: #ef4444; color: white; }
+
+        .endpoint-url {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: var(--bg-primary);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .parameter-table th,
+        .parameter-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .parameter-table th {
+            background-color: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .parameter-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-required { background-color: #ef4444; color: white; }
+        .badge-optional { background-color: #6b7280; color: white; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100vw;
+                padding: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .language-tabs {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        .search-box {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="text-xl font-bold">TechAPI Docs</h2>
+            <p class="text-sm mt-1">v2.1.0</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search documentation...">
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="#introduction" class="nav-item active">
+                    <i class="fas fa-rocket"></i>
+                    Introduction
+                </a>
+                <a href="#installation" class="nav-item">
+                    <i class="fas fa-download"></i>
+                    Installation
+                </a>
+                <a href="#authentication" class="nav-item">
+                    <i class="fas fa-key"></i>
+                    Authentication
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">API Reference</div>
+                <a href="#users" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Users
+                </a>
+                <a href="#projects" class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    Projects
+                </a>
+                <a href="#webhooks" class="nav-item">
+                    <i class="fas fa-bolt"></i>
+                    Webhooks
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="#rate-limiting" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Rate Limiting
+                </a>
+                <a href="#errors" class="nav-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Error Handling
+                </a>
+                <a href="#sdks" class="nav-item">
+                    <i class="fas fa-code"></i>
+                    SDKs
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <main class="main-content" id="mainContent">
+        <section id="introduction" class="section">
+            <h1 class="section-title">Introduction to TechAPI</h1>
+            <p class="text-lg mb-6">Welcome to the TechAPI documentation. Our RESTful API provides powerful tools for managing users, projects, and integrations. This guide will help you get started quickly and efficiently.</p>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i>
+                <strong>API Version:</strong> This documentation covers API v2.1.0. For legacy versions, please refer to our <a href="#" class="text-blue-400 hover:underline">archive documentation</a>.
+            </div>
+
+            <h3 class="section-subtitle">Key Features</h3>
+            <ul class="list-disc list-inside space-y-2 mb-6">
+                <li>RESTful architecture with JSON responses</li>
+                <li>OAuth 2.0 and API key authentication</li>
+                <li>Rate limiting and request throttling</li>
+                <li>Comprehensive webhook system</li>
+                <li>Real-time WebSocket connections</li>
+                <li>Multi-language SDK support</li>
+            </ul>
+
+            <h3 class="section-subtitle">Base URL</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>API Endpoint</span>
+                    <button class="copy-btn" onclick="copyToClipboard(this, 'https://api.techapi.com/v2')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+                <pre><code>https://api.techapi.com/v2</code></pre>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <h2 class="section-title">Installation</h2>
+            <p class="mb-6">Choose your preferred method to start integrating with TechAPI.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="language-tabs">
+                        <button class="tab-btn active" onclick="showTab(this, 'curl')">cURL</button>
+                        <button class="tab-btn" onclick="showTab(this, 'javascript')">JavaScript</button>
+                        <button class="tab-btn" onclick="showTab(this, 'python')">Python</button>
+                        <button class="tab-btn" onclick="showTab(this, 'php')">PHP</button>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="tab-content" id="curl">
+                    <pre><code class="language-bash"># Install via curl
+curl -X GET "https://api.techapi.com/v2/status" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"</code></pre>
+                </div>
+
+                <div class="tab-content hidden" id="javascript">
+                    <pre><code class="language-javascript">// Install via npm
+npm install @techapi/sdk
+
+// Initialize the client
+import { TechAPI } from '@techapi/sdk';
+
+const client = new TechAPI({
+  apiKey: 'YOUR_API_KEY',
+  environment: 'production'
+});
+
+// Test connection
+const status = await client.getStatus();</code></pre>
+                </div>
+
+                <div class="tab-content hidden" id="python">
+                    <pre><code class="language-python"># Install via pip
+pip install techapi-python
+
+# Initialize the client
+from techapi import TechAPI
+
+client = TechAPI(api_key='YOUR_API_KEY')
+
+# Test connection
+status = client.get_status()</code></pre>
+                </div>
+
+                <div class="tab-content hidden" id="php">
+                    <pre><code class="language-php"># Install via composer
+composer require techapi/php-sdk
+
+# Initialize the client
+require_once 'vendor/autoload.php';
+
+use TechAPI\Client;
+
+$client = new Client([
+    'api_key' => 'YOUR_API_KEY'
+]);
+
+// Test connection
+$status = $client->getStatus();</code></pre>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <strong>Security Note:</strong> Never expose your API keys in client-side code. Always use environment variables or secure configuration files.
+            </div>
+        </section>
+
+        <section id="authentication" class="section">
+            <h2 class="section-title">Authentication</h2>
+            <p class="mb-6">TechAPI supports multiple authentication methods. Choose the one that best fits your use case.</p>
+
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <span class="font-semibold">API Key Authentication</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="collapsible-content">
+                    <p class="mb-4">The simplest way to authenticate. Include your API key in the Authorization header.</p>
+                    <div class="code-block">
+                        <pre><code class="language-bash">curl -H "Authorization: Bearer YOUR_API_KEY" \
+  https://api.techapi.com/v2/users</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <span class="font-semibold">OAuth 2.0 Flow</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="collapsible-content">
+                    <p class="mb-4">For applications that need to act on behalf of users. Supports authorization code and client credentials flows.</p>
+                    <div class="code-block">
+                        <pre><code class="language-javascript">// Step 1: Redirect user to authorization URL
+const authUrl = `https://api.techapi.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+
+// Step 2: Exchange code for access token
+const tokenResponse = await fetch('https://api.techapi.com/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    grant_type: 'authorization_code',
+    client_id: clientId,
+    client_secret: clientSecret,
+    code: authCode
+  })
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="users" class="section">
+            <h2 class="section-title">Users API</h2>
+            <p class="mb-6">Manage user accounts, profiles, and permissions.</p>
+
+            <div class="endpoint">
+                <div class="mb-4">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-url">/users</span>
+                </div>
+                <p class="mb-4">Retrieve a list of users with optional filtering and pagination.</p>
+
+                <h4 class="font-semibold mb-2">Query Parameters</h4>
+                <table class="parameter-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>page</code></td>
+                            <td>integer</td>
+                            <td><span class="badge badge-optional">Optional</span></td>
+                            <td>Page number for pagination (default: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><code>limit</code></td>
+                            <td>integer</td>
+                            <td><span class="badge badge-optional">Optional</span></td>
+                            <td>Number of items per page (max: 100)</td>
+                        </tr>
+                        <tr>
+                            <td><code>search</code></td>
+                            <td>string</td>
+                            <td><span class="badge badge-optional">Optional</span></td>
+                            <td>Search users by name or email</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="font-semibold mb-2 mt-4">Example Response</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>200 OK</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code class="language-json">{
+  "data": [
+    {
+      "id": "usr_123456789",
+      "email": "jane.doe@example.com",
+      "name": "Jane Doe",
+      "avatar": "https://api.techapi.com/avatars/usr_123456789",
+      "role": "admin",
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-20T14:45:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 1,
+    "has_more": false
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="mb-4">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-url">/users</span>
+                </div>
+                <p class="mb-4">Create a new user account.</p>
+
+                <h4 class="font-semibold mb-2">Request Body</h4>
+                <div class="code-block">
+                    <pre><code class="language-json">{
+  "email": "john.smith@example.com",
+  "name": "John Smith",
+  "role": "user",
+  "password": "secure_password_123"
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="errors" class="section">
+            <h2 class="section-title">Error Handling</h2>
+            <p class="mb-6">TechAPI uses conventional HTTP response codes to indicate the success or failure of API requests.</p>
+
+            <div class="alert alert-error">
+                <i class="fas fa-times-circle mr-2"></i>
+                <strong>Important:</strong> Always handle errors gracefully in your applications. Implement proper retry logic for transient failures.
+            </div>
+
+            <h3 class="section-subtitle">HTTP Status Codes</h3>
+            <table class="parameter-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>200</code></td>
+                        <td>OK</td>
+                        <td>Request successful</td>
+                    </tr>
+                    <tr>
+                        <td><code>400</code></td>
+                        <td>Bad Request</td>
+                        <td>Invalid request parameters</td>
+                    </tr>
+                    <tr>
+                        <td><code>401</code></td>
+                        <td>Unauthorized</td>
+                        <td>Invalid or missing API key</td>
+                    </tr>
+                    <tr>
+                        <td><code>403</code></td>
+                        <td>Forbidden</td>
+                        <td>Insufficient permissions</td>
+                    </tr>
+                    <tr>
+                        <td><code>404</code></td>
+                        <td>Not Found</td>
+                        <td>Resource not found</td>
+                    </tr>
+                    <tr>
+                        <td><code>429</code></td>
+                        <td>Too Many Requests</td>
+                        <td>Rate limit exceeded</td>
+                    </tr>
+                    <tr>
+                        <td><code>500</code></td>
+                        <td>Internal Server Error</td>
+                        <td>Server error</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-subtitle">Error Response Format</h3>
+            <div class="code-block">
+                <pre><code class="language-json">{
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "The request is missing required parameters",
+    "details": {
+      "missing_fields": ["email", "name"]
+    },
+    "request_id": "req_123456789"
+  }
+}</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('expanded');
+        }
+
+        function showTab(button, tabId) {
+            // Remove active class from all tabs
+            const tabs = button.parentElement.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            button.classList.add('active');
+            
+            // Hide all tab contents
+            const codeBlock = button.closest('.code-block');
+            const tabContents = codeBlock.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Show selected tab content
+            const selectedContent = codeBlock.querySelector(`#${tabId}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            }
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const activeTab = codeBlock.querySelector('.tab-content:not(.hidden)');
+            const code = activeTab ? activeTab.textContent : codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code.trim()).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        function toggleCollapsible(header) {
+            const collapsible = header.parentElement;
+            collapsible.classList.toggle('expanded');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                }
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !menuBtn.contains(e.target) && 
+                sidebar.classList.contains('open')) {
+                toggleSidebar();
+            }
+        });
+
+        // Initialize Prism.js for syntax highlighting
+        if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+        }
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDuPxpLUCM0MvJPTr29LA6JsBsMmoVBlmC5zRrbDiARsPUFdozLNQOtHls0oVZV5jh3czyw6BIfcy6sQIlF6zqLMHezZCmpIVUc6uHH9bl50cUPt9WNSyomJHT7RUKkrLORCBLCltRlBPE6eZloNNckn%2BPBXNkAvrKXNY2B%2BtNBlx0uMsGE2%2B7EPedT8FaINOK2brxKD3dId9muZeby0l%2FRR20%2BHwMp%2Ba1Ulx49Y4Sh5%2BKJZyPlBL7njrq%2B0UqZ0uwOn8ptP5n4aJrqxbq7h5nwQF14GPT3Z13iOdEs0znh4GPrbYuTnxZPY6pN2Ajz%2BLYZu6yvjGtCRRb2FOB5KoXNe5w72rTomj%2Bq7E4mBMyZGtbFreWcWzfZzQhphCzdCAq%2BcAwiv7n1sAh7voect8bFWEsj3xS3aZxQqBkgDYVTkFo4OUY%2BXJFd0S9AApB4c5eoJ1cO8YJqKDUsENq%2BnJmwX4sxpO34aPaGPCLMFi19MQSeOopOW7OaFoPqegnXhu7hqPbrt9a9p%2FRJOlvR%2Bm4XU%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDuPxpLUCM0MvJPTr29LA6JsBsMmoVBlmC5zRrbDiARsPUFdozLNQOtHls0oVZV5jh3czyw6BIfcy6sQIlF6zqLMHezZCmpIVUc6uHH9bl50cUPt9WNSyomJHT7RUKkrLORCBLCltRlBPE6eZloNNckn+PBXNkAvrKXNY2B+tNBlx0uMsGE2+7EPedT8FaINOK2brxKD3dId9muZeby0l/RR20+HwMp+a1Ulx49Y4Sh5+KJZyPlBL7njrq+0UqZ0uwOn8ptP5n4aJrqxbq7h5nwQF14GPT3Z13iOdEs0znh4GPrbYuTnxZPY6pN2Ajz+LYZu6yvjGtCRRb2FOB5KoXNe5w72rTomj+q7E4mBMyZGtbFreWcWzfZzQhphCzdCAq+cAwiv7n1sAh7voect8bFWEsj3xS3aZxQqBkgDYVTkFo4OUY+XJFd0S9AApB4c5eoJ1cO8YJqKDUsENq+nJmwX4sxpO34aPaGPCLMFi19MQSeOopOW7OaFoPqegnXhu7hqPbrt9a9p/RJOlvR+m4XU=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
